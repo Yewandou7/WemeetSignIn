@@ -66,6 +66,7 @@ def SignIn(meeting_id, password=None):
     time.sleep(2)
     ImgAutoClick("final.png", pyautogui.click, False)
     time.sleep(1)
+    # res = ImgAutoClick("password.png", pyautogui.moveTo, False)
     if password != "xxxxxx":
         res = ImgAutoClick("password.png", pyautogui.moveTo, False)
         pyautogui.write(password)
@@ -87,20 +88,21 @@ def load_schdule(class_address):
 
 def get_class(schdule):
     NowDay = datetime.now().weekday()
-    today_lessons = schdule.loc[schdule['day'] == NowDay]
+    today_lessons = schdule.loc[schdule['day'] == NowDay+1]
     today_lessons = today_lessons.reset_index(drop=True)
+    # print(today_lessons)
     now = datetime.now()
     for i in range(len(today_lessons)):
         # print(today_lessons.values[i][1].hour, today_lessons.values[i][1].minute, now.hour, now.minute)
-        if now.hour <= today_lessons.values[i][1].hour and now.minute <= today_lessons.values[i][1].minute:
-            Hour = today_lessons.values[i][1].hour
-            Minute = today_lessons.values[i][1].minute
-            Second = today_lessons.values[i][1].second
+        Hour = today_lessons.values[i][1].hour
+        Minute = today_lessons.values[i][1].minute
+        Second = today_lessons.values[i][1].second
+        if now.hour < Hour or (now.hour == Hour and now.minute <= Minute):
             res_time = (Hour - now.hour) * 3600 + (Minute - now.minute) * 60 + Second - now.second
             # res_time = (today_lessons[i][1].hour - now.hour)*3600 + (today_lessons[i][1].minute - now.minute)*60 - now.second
             # print(type(today_lessons.values[i][1].hour), today_lessons.values[i][1].minute, now.hour, now.minute)
             if res_time > 60:
-                print("Sleeping, waiting for next lesson. Res time: {} seconds".format(res_time))
+                print("Sleeping, waiting for next lesson. Res time: {} hour, {} min, {} seconds".format(res_time // 3600, (res_time % 3600) // 60, res_time % 60))
                 time.sleep(res_time - 59)
                 print("Start trying to join the class")
             # return lessons_name, lessons_start_time, lessons_meet_id, lessons_password
