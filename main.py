@@ -79,8 +79,8 @@ def load_schdule(class_address):
     data = pd.read_excel(class_address)
     data.sort_values(by=['day', 'start_time'], inplace=True)
     data = data.reset_index(drop=True)
-    pd.set_option('max_rows', None)
-    pd.set_option('max_columns', None)
+    # pd.set_option('max_rows', None)
+    # pd.set_option('max_columns', None)
     pd.set_option('expand_frame_repr', False)
     pd.set_option('display.unicode.east_asian_width', True)
     print(data,"\n")
@@ -101,10 +101,20 @@ def get_class(schdule):
             res_time = (Hour - now.hour) * 3600 + (Minute - now.minute) * 60 + Second - now.second
             # res_time = (today_lessons[i][1].hour - now.hour)*3600 + (today_lessons[i][1].minute - now.minute)*60 - now.second
             # print(type(today_lessons.values[i][1].hour), today_lessons.values[i][1].minute, now.hour, now.minute)
-            if res_time > 60:
+            class_name, start_time, meet_id, password = today_lessons.values[i][0], today_lessons.values[i][1], today_lessons.values[i][2], today_lessons.values[i][3]
+            print("Next Class: " + class_name + "\n")
+            print("Start time: " + str(start_time) + "\n")
+            print("Meeting id: " + meet_id + "\n")
+            print("Password: " + str(password) + "\n")
+            while res_time > 60:
                 print("Sleeping, waiting for next lesson. Res time: {} hour, {} min, {} seconds".format(res_time // 3600, (res_time % 3600) // 60, res_time % 60))
-                time.sleep(res_time - 59)
-                print("Start trying to join the class")
+                if res_time > 3600:
+                    time.sleep(3600)
+                    res_time -= 3600
+                else:
+                    time.sleep(res_time-30)
+                    print("Start trying to join the class")
+                    break
             # return lessons_name, lessons_start_time, lessons_meet_id, lessons_password
             return today_lessons.values[i][0], today_lessons.values[i][1], today_lessons.values[i][2], today_lessons.values[i][3]
     return None, None, None, None
@@ -119,11 +129,8 @@ if __name__ == "__main__":
             print("No class today!")
             now = datetime.now()
             time.sleep(86400 - now.hour*3600 - now.minute*60 - now.second)
+            print("New day!")
             continue
-        print("Next Class: " + class_name + "\n")
-        print("Start time: " + str(start_time) + "\n")
-        print("Meeting id: " + meet_id + "\n")
-        print("Password: " + str(password) + "\n")
         now = datetime.now()
         SignIn(meet_id, str(password))
         print("Signed in successfully!")
