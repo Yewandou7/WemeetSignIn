@@ -108,6 +108,8 @@ def get_class(schdule):
             print("Password: " + str(password) + "\n")
             while res_time > 60:
                 print("Sleeping, waiting for next lesson. Res time: {} hour, {} min, {} seconds".format(res_time // 3600, (res_time % 3600) // 60, res_time % 60))
+                now = datetime.now()
+                print("Now time: {} hour, {} min, {} seconds".format(now.hour, now.minute, now.second))
                 if res_time > 3600:
                     time.sleep(3600)
                     res_time -= 3600

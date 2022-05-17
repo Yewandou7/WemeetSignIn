@@ -16,6 +16,14 @@
 
 打开main.py, 修改SignIn函数的第一行, 改为自己对应腾讯会议的路径.
 
+环境可使用命令
+
+```python
+pip install -r requirements.txt
+```
+
+不清楚最低版本是多少, 应该很低, 本地环境是python=3.10.4
+
 
 
 ---

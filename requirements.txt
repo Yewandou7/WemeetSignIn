@@ -1,0 +1,3 @@
+opencv_python==4.5.5.64
+pandas==1.4.2
+PyAutoGUI==0.9.53
